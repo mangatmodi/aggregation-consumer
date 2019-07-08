@@ -4,13 +4,7 @@ import com.github.mangatmodi.consumer.common.*
 import com.github.mangatmodi.consumer.config.ApplicationConfig
 import com.google.inject.Inject
 import io.reactivex.Single
-import java.io.BufferedWriter
 import java.io.File
-
-fun BufferedWriter.writeln(line: String) {
-    write(line)
-    newLine()
-}
 
 class AggregationService @Inject constructor(
     private val config: ApplicationConfig.Aggregation
@@ -73,9 +67,10 @@ class AggregationService @Inject constructor(
                 out.writeln(line)
             }
         }
+        logger.info("Finished saving data at: $fileName")
     }
 
-    fun saveBlocking() = save(this.data)
+    fun unsafeSave() = save(this.data)
 
     private fun toUserMetric(message: List<String>) =
         UserMetric(

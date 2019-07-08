@@ -12,24 +12,14 @@ services:
       skynet:
         aliases:
         - "aggregation-consumer"
+    volumes:
+      - /tmp/aggregation-consumer/:/tmp/aggregation-consumer/
     environment:
       JAVA_OPTS: -Dlogback.configurationFile=logback-dev.xml
       HOST_ADDRESS: ${HOST_ADDRESS}
       JAR_NAME: ${JAR_NAME}
       PORT: 9000
-
-  producer:
-    image: mangatmodi/producer:latest
-    command: >
-      java -jar producer.jar --tcp
-    networks:
-      skynet:
-        aliases:
-        - "producer"
-    environment:
-      JAVA_OPTS: -Dlogback.configurationFile=logback-dev.xml
-      HOST_ADDRESS: ${HOST_ADDRESS}
-      JAR_NAME: producer.jar
+      SIZE: ${SIZE}
 
 networks:
   skynet:
