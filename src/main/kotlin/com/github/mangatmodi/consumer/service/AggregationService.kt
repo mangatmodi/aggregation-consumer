@@ -22,12 +22,11 @@ class AggregationService @Inject constructor(
         try {
             File(config.path).mkdirs()
         } catch (e: Throwable) {
-            logger.error("Exiting server", e)
+            logger.error("Unable to make output directory. Exiting server", e)
             System.exit(1)
         }
     }
 
-    //TODO: check in a synchronized and then make a copy
     fun process(line: String?) {
         Single.fromCallable {
             val message = line?.split(",") ?: listOf()
@@ -43,7 +42,7 @@ class AggregationService @Inject constructor(
                 if (copy != null) {
                     Single.fromCallable {
                         data.counter.getAndSet(0)
-                        save(data)
+                        save(copy)
                         data = FileData()
                     }.subscribeOn(ioScheduler)
                 } else {
@@ -58,7 +57,7 @@ class AggregationService @Inject constructor(
 
     private fun append(message: List<String>) {
         data.sum = data.sum + message[Field.SUM].toBigInteger()
-        //merge is thread safe
+        // merge is synchronised on bucket
         data.perUser.merge(message[Field.ID], toUserMetric(message)) { existing, default ->
             existing + default
         }
@@ -76,7 +75,7 @@ class AggregationService @Inject constructor(
         }
     }
 
-    fun unsafeSave() = save(this.data)
+    fun saveBlocking() = save(this.data)
 
     private fun toUserMetric(message: List<String>) =
         UserMetric(
@@ -86,9 +85,9 @@ class AggregationService @Inject constructor(
         )
 
     @Synchronized
+    // switch references if `config.size` reached
     private fun copyIfReached(): FileData? {
         return if (data.counter.incrementAndGet() == config.size) {
-            //Switch refrences
             val temp = data
             data = FileData()
             temp
@@ -97,4 +96,3 @@ class AggregationService @Inject constructor(
         }
     }
 }
-

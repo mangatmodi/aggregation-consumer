@@ -28,7 +28,7 @@ class ConsumerService @Inject constructor(
 
             Runtime.getRuntime().addShutdownHook(Thread {
                 logger.warn("Shutting down server")
-                aggregationService.unsafeSave() //flushes the remaining data
+                aggregationService.saveBlocking() // flushes the remaining data
                 server.close()
                 logger.warn("Finished cleaning up")
             })
@@ -38,7 +38,6 @@ class ConsumerService @Inject constructor(
 
                 launch {
                     logger.info("Socket accepted: ${socket.remoteAddress}")
-
                     val input = socket.openReadChannel()
                     try {
                         while (true) {
@@ -52,7 +51,7 @@ class ConsumerService @Inject constructor(
                         }
                     } catch (e: Throwable) {
                         e.printStackTrace()
-                        aggregationService.unsafeSave() //flushes the remaining data
+                        aggregationService.saveBlocking() // flushes the remaining data, if any
                         socket.close()
                     }
                 }

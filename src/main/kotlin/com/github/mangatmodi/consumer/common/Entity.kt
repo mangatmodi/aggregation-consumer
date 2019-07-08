@@ -7,7 +7,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 class FileData {
-    val version = UUID.randomUUID() //remove
+    val version = UUID.randomUUID() // remove
     val counter: AtomicInt = atomic(0)
     var sum: BigInteger = BigInteger.ZERO
     val perUser: ConcurrentHashMap<String, UserMetric> = ConcurrentHashMap()
@@ -19,7 +19,6 @@ data class UserMetric(val sum: Double, val recent: Long, val count: Int) {
         new.recent,
         this.count + new.count
     )
-
 }
 
 object Field {

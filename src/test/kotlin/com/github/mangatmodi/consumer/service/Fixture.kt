@@ -8,7 +8,7 @@ import java.util.*
 
 object Fixture {
 
-    //TODO: File rotation not working
+    // TODO: File rotation not working
     val aggregationConfig = ApplicationConfig.Aggregation(
         size = 5,
         path = "/tmp/aggregation-consumer/test/${UUID.randomUUID()}/"

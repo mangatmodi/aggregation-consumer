@@ -13,13 +13,13 @@ class TestAggregationService : ShouldSpec() {
 
     init {
         "AggregationService" {
-            "when starting"{
+            "when starting" {
                 should("create path directory") {
                     AggregationService(Fixture.aggregationConfig)
                     File(Fixture.aggregationConfig.path).exists() shouldBe true
                 }
             }
-            "when processing"{
+            "when processing" {
                 should("create 2 files when data exceeds size") {
                     val service = AggregationService(Fixture.aggregationConfig)
                     SocketClient.test { service.process(it) }
