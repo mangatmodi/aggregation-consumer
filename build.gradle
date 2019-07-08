@@ -11,7 +11,7 @@ plugins {
 
 group 'com.github.mangatmodi'
 version '1.0'
-mainClassName = "com.github.mangatmodi.mail.Main"
+mainClassName = "com.github.mangatmodi.consumer.Main"
 
 def gitDetails = versionDetails()
 def projectTag = "${gitDetails.gitHash}"
@@ -29,6 +29,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     kotlinOptions {
         allWarningsAsErrors = true
         jvmTarget = "1.8"
+
     }
 }
 
@@ -84,6 +85,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     compile "io.ktor:ktor-server-netty:1.2.2"
     compile "io.ktor:ktor-jackson:1.2.2"
+    compile "io.ktor:ktor-network:1.2.2"
     compile "ch.qos.logback:logback-classic:1.2.3"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.4"
@@ -106,6 +108,8 @@ dependencies {
     testCompile "io.rest-assured:rest-assured:3.0.6"
     testCompile "junit:junit:4.12"
     testCompile "com.github.javafaker:javafaker:0.18"
+
+    //docker project("docker/producer/")
 }
 
 def getLocalIPv4() {
