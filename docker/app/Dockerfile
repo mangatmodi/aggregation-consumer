@@ -5,6 +5,7 @@ ARG HOST_ADDRESS
 
 ADD ${JAR_NAME} ${JAR_NAME}
 ADD start-app.sh start-app.sh
+RUN chmod a+x start-app.sh
 
 EXPOSE 8080
 ENV JAR_NAME "${JAR_NAME}"
