@@ -12,7 +12,7 @@ class ConfigModuleTest : ShouldSpec() {
                 should("read config") {
                     val injector = Guice.createInjector(ConfigModule())
                     val config = injector.getInstance(ApplicationConfig.Aggregation::class.java)
-                    config.size shouldBe 1000
+                    config.size shouldBe 5
                 }
             }
         }

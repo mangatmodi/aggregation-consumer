@@ -19,6 +19,7 @@ def jarName = "${project.name}-${version}.jar"
 def baseDockerName = "mangatmodi/${project.name}"
 def baseDockerFile = file("${project.projectDir}/docker/app/Dockerfile")
 def HOST_ADDRESS = getLocalIPv4()
+def SIZE = System.getenv("SIZE") ?: "5"
 
 repositories {
     mavenCentral()
@@ -62,15 +63,13 @@ dockerRun {
 
 dockerCompose {
     useComposeFiles = ["${project.projectDir}/docker/docker-compose.yml"]
-    if (System.getenv("CONFIG_PROFILE") == "dev") {
-        upAdditionalArgs = ["kafka", "fakesmtp"]
-    }
     captureContainersOutput = true
     forceRecreate = true
     removeContainers = true
     environment["DOCKER_IMAGE"] = project.docker.name
     environment["HOST_ADDRESS"] = "${HOST_ADDRESS}"
     environment["JAR_NAME"] = "${jarName}"
+    environment["SIZE"] = "${SIZE}"
 }
 
 // Task Dependencies
@@ -87,29 +86,16 @@ dependencies {
     compile "io.ktor:ktor-jackson:1.2.2"
     compile "io.ktor:ktor-network:1.2.2"
     compile "ch.qos.logback:logback-classic:1.2.3"
-    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.4"
-    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.4"
-    compile "com.fasterxml.jackson.core:jackson-core:2.9.4"
-    compile "com.fasterxml.jackson.core:jackson-databind:2.9.4"
     compile "com.google.inject:guice:4.1.0"
-    compile "org.apache.kafka:kafka-clients:2.3.0"
     compile "com.typesafe:config:1.3.4"
-    compile "commons-validator:commons-validator:1.6"
     compile "com.github.ajalt:clikt:2.0.0"
     compile "io.reactivex.rxjava2:rxkotlin:2.3.0"
-
-    compile "io.vertx:vertx-kafka-client:3.7.1"
     compile "io.vertx:vertx-rx-java2:3.7.1"
-    compile "io.vertx:vertx-web-client:3.7.1"
-    compile "io.vertx:vertx-mail-client:3.7.1"
 
     // test
     testCompile "io.kotlintest:kotlintest:2.0.7"
-    testCompile "io.rest-assured:rest-assured:3.0.6"
     testCompile "junit:junit:4.12"
-    testCompile "com.github.javafaker:javafaker:0.18"
 
-    //docker project("docker/producer/")
 }
 
 def getLocalIPv4() {
