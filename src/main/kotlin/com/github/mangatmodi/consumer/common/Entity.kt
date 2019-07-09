@@ -3,11 +3,9 @@ package com.github.mangatmodi.consumer.common
 import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
 import java.math.BigInteger
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 class FileData {
-    val version = UUID.randomUUID() // remove
     val counter: AtomicInt = atomic(0)
     var sum: BigInteger = BigInteger.ZERO
     val perUser: ConcurrentHashMap<String, UserMetric> = ConcurrentHashMap()
